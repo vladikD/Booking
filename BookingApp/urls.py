@@ -7,11 +7,11 @@ from .views import register_user, delete_user
 
 urlpatterns = [
     # вивід готелів, кімнат, бронювань і їх деталей
-    path('hotels/', views.HotelListView.as_view()),
-    path('hotels/<int:pk>/', views.HotelDetailView.as_view()),
-    path('rooms/', views.RoomListView.as_view()),
-    path('room/<int:pk>/', views.RoomDetailView.as_view()),
-    path('reservations/', views.ReservationListView.as_view()),
+    path('hotels/', views.HotelListView.as_view(), name='hotel-list'),
+    path('hotels/<int:pk>/', views.HotelDetailView.as_view(), name='hotel-detail'),
+    path('rooms/', views.RoomListView.as_view(), name='room-list'),
+    path('room/<int:pk>/', views.RoomDetailView.as_view(), name='room-detail'),
+    path('reservations/', views.ReservationListView.as_view(), name='reservation-list'),
     path('reservations/<int:pk>/', views.ReservationDetailView.as_view(), name='reservation-detail'),
     # аутентифікація звичайна по логіну та паролю
     path('drf-auth/', include('rest_framework.urls')),

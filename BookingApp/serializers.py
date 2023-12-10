@@ -1,6 +1,7 @@
+from django.contrib.auth.models import User
 from rest_framework import serializers
 from BookingApp.models import Hotel, Room, Reservation
-from django.contrib.auth.models import User
+
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
@@ -13,6 +14,12 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         # Кастомна валідація для формату електронної пошти
         if not value.endswith('@gmail.com'):
             raise serializers.ValidationError('Електронна пошта повинна закінчуватися на @gmail.com.')
+        return value
+
+    def validate_first_name(self, value):
+        # Ваша логіка валідації імені, наприклад, чи містить лише букви
+        if not value.isalpha():
+            raise serializers.ValidationError('Неприпустимий формат імені.')
         return value
 
     def validate_password(self, value):

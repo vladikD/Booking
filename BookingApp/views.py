@@ -8,6 +8,7 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticate
 #______________Django______________________
 from django.http import Http404
 from django.contrib.auth.models import User
+from django.shortcuts import get_object_or_404
 
 #___________OTHER___________________________
 from .models import Hotel, Room, Reservation
@@ -42,6 +43,11 @@ def delete_user(request):
 )
 @api_view(['POST'])
 def register_user(request):
+    # Перевірка наявності користувача з таким самим email
+    existing_user = User.objects.filter(email=request.data.get('email')).first()
+    if existing_user:
+        return Response({'error': 'User with this email already exists.'}, status=status.HTTP_400_BAD_REQUEST)
+
     serializer = UserRegistrationSerializer(data=request.data)
 
     if serializer.is_valid():
@@ -49,7 +55,6 @@ def register_user(request):
         return Response({'message': 'User registered successfully'}, status=status.HTTP_201_CREATED)
     else:
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
@@ -96,7 +101,7 @@ class HotelDetailView(APIView):
         responses={200: openapi.Response('Hotel details', HotelSerializer)}
     )
     def get(self, request, pk, format=None):
-        hotel = self.get_object(pk)
+        hotel = get_object_or_404(Hotel, pk=pk)
         serializer = HotelSerializer(hotel)
         return Response(serializer.data)
 
@@ -162,7 +167,7 @@ class RoomDetailView(APIView):
         responses={200: openapi.Response('Room details', RoomSerializer)}
     )
     def get(self, request, pk, format=None):
-        room = self.get_object(pk)
+        room = get_object_or_404(Room, pk=pk)
         serializer = RoomSerializer(room)
         return Response(serializer.data)
 
@@ -214,10 +219,9 @@ class ReservationListView(APIView):
     def post(self, request, format=None):
         serializer = ReservationSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
+            serializer.save(client=request.user)  # Використовую client для збереження користувача
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 class ReservationDetailView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -229,7 +233,7 @@ class ReservationDetailView(APIView):
         responses={200: openapi.Response('Reservation details', ReservationSerializer)}
     )
     def get(self, request, pk, format=None):
-        reservation = self.get_object(pk)
+        reservation = get_object_or_404(Reservation, pk=pk)
         serializer = ReservationSerializer(reservation)
         return Response(serializer.data)
 
