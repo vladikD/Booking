@@ -114,7 +114,7 @@ class HotelDetailView(APIView):
         responses={200: 'Updated', 400: 'Bad Request'}
     )
     def put(self, request, pk, format=None):
-        hotel = self.get_object(pk)
+        hotel = get_object_or_404(Hotel, pk=pk)
         serializer = HotelSerializer(hotel, data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -129,7 +129,7 @@ class HotelDetailView(APIView):
         responses={204: 'No Content'}
     )
     def delete(self, request, pk, format=None):
-        hotel = self.get_object(pk)
+        hotel = get_object_or_404(Hotel, pk=pk)
         hotel.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 class RoomListView(APIView):
@@ -180,7 +180,7 @@ class RoomDetailView(APIView):
         responses={200: 'Updated', 400: 'Bad Request'}
     )
     def put(self, request, pk, format=None):
-        room = self.get_object(pk)
+        room = get_object_or_404(Room, pk=pk)
         serializer = RoomSerializer(room, data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -195,7 +195,7 @@ class RoomDetailView(APIView):
         responses={204: 'No Content'}
     )
     def delete(self, request, pk, format=None):
-        room = self.get_object(pk)
+        room = get_object_or_404(Room, pk=pk)
         room.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -246,7 +246,7 @@ class ReservationDetailView(APIView):
         responses={200: 'Updated', 400: 'Bad Request'}
     )
     def patch(self, request, pk, format=None):
-        reservation = self.get_object(pk)
+        reservation = get_object_or_404(Reservation, pk=pk)
         if reservation is None:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
@@ -264,6 +264,6 @@ class ReservationDetailView(APIView):
         responses={204: 'No Content'}
     )
     def delete(self, request, pk, format=None):
-        reservation = self.get_object(pk)
+        reservation = get_object_or_404(Reservation, pk=pk)
         reservation.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)

@@ -12,7 +12,7 @@ urlpatterns = [
     path('rooms/', views.RoomListView.as_view(), name='room-list'),
     path('room/<int:pk>/', views.RoomDetailView.as_view(), name='room-detail'),
     path('reservations/', views.ReservationListView.as_view(), name='reservation-list'),
-    path('reservations/<int:pk>/', views.ReservationDetailView.as_view(), name='reservation-detail'),
+    path('reservation/<int:pk>/', views.ReservationDetailView.as_view(), name='reservation-detail'),
     # аутентифікація звичайна по логіну та паролю
     path('drf-auth/', include('rest_framework.urls')),
     # реєстрація користувача POST запит email, first_name, last_name, password
