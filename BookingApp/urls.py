@@ -1,5 +1,4 @@
-from rest_framework.urlpatterns import format_suffix_patterns
-from django.urls import path, include, re_path
+from django.urls import path, include
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
 from . import views
 from .views import register_user, delete_user
